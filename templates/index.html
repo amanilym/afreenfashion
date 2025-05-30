@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Latest Fashion Designs</h1>
+        <p>Discover our exclusive collection of designer outfits</p>
+        <a href="{{ url_for('products') }}" class="btn">Shop Now</a>
+    </div>
+</section>
+
+<section class="featured-products">
+    <h2>New Arrivals</h2>
+    <div class="product-grid">
+        {% for product in products %}
+        <div class="product-card">
+            <a href="{{ url_for('product_detail', product_id=product['id']) }}">
+                <div class="product-image">
+                    {% if product['image_path'] %}
+                        <img src="{{ url_for('static', filename=product['image_path']) }}" alt="{{ product['name'] }}">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Placeholder">
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <h3>{{ product['name'] }}</h3>
+                    <p class="design-number">Design #{{ product['design_number'] }}</p>
+                    <p class="price">₹{{ "%.2f"|format(product['price']) }}</p>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

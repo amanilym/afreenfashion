@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product['name'] }}{% endblock %}
+
+{% block content %}
+<section class="product-detail">
+    <div class="product-images">
+        {% if product['image_path'] %}
+            <img src="{{ url_for('static', filename=product['image_path']) }}" alt="{{ product['name'] }}">
+        {% else %}
+            <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Placeholder">
+        {% endif %}
+    </div>
+    
+    <div class="product-info">
+        <h1>{{ product['name'] }}</h1>
+        <p class="design-number">Design #{{ product['design_number'] }}</p>
+        <p class="price">₹{{ "%.2f"|format(product['price']) }}</p>
+        
+        {% if product['description'] %}
+        <div class="product-description">
+            <h3>Description</h3>
+            <p>{{ product['description'] }}</p>
+        </div>
+        {% endif %}
+        
+        <form action="{{ url_for('add_to_cart') }}" method="POST">
+            <input type="hidden" name="product_id" value="{{ product['id'] }}">
+            
+            <div class="form-group">
+                <label for="size">Size</label>
+                <select name="size" id="size" required>
+                    <option value="">Select Size</option>
+                    {% for size in sizes %}
+                        <option value="{{ size['size'] }}">{{ size['size'] }} ({{ size['quantity'] }} available)</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="quantity">Quantity</label>
+                <input type="number" name="quantity" id="quantity" min="1" value="1" required>
+            </div>
+            
+            <button type="submit" class="btn">Add to Cart</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Order Confirmation #{{ order['id'] }}{% endblock %}
+
+{% block content %}
+<section class="order-confirmation">
+    <div class="confirmation-box">
+        <div class="confirmation-header">
+            <i class="fas fa-check-circle"></i>
+            <h1>Order Confirmed!</h1>
+            <p>Thank you for your purchase. Your order has been received.</p>
+        </div>
+        
+        <div class="order-details">
+            <div class="detail-row">
+                <span>Order Number</span>
+                <span>#{{ order['id'] }}</span>
+            </div>
+            <div class="detail-row">
+                <span>Date</span>
+                <span>
+                    {% if order['order_date'] is string %}
+                        {{ order['order_date'] }}
+                    {% else %}
+                        {{ order['order_date'].strftime('%d %b %Y %I:%M %p') }}
+                    {% endif %}
+                </span>
+            </div>
+            <div class="detail-row">
+                <span>Total</span>
+                <span>₹{{ "%.2f"|format(order['total_amount']) }}</span>
+            </div>
+            <div class="detail-row">
+                <span>Status</span>
+                <span class="status-{{ order['status'].lower() }}">{{ order['status'] }}</span>
+            </div>
+            <div class="detail-row">
+                <span>Shipping Address</span>
+                <span>{{ order['shipping_address'] }}</span>
+            </div>
+        </div>
+        
+        <div class="order-items">
+            <h3>Order Items</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Design #</th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order['items'] %}
+                    <tr>
+                        
+                        <td>{{ item['name'] }}</td>
+                        <td>{{ item['design_number'] }}</td>
+                        <td>{{ item['size'] }}</td>
+                        <td>{{ item['quantity'] }}</td>
+                        <td>₹{{ "%.2f"|format(item['price']) }}</td>
+                        <td>₹{{ "%.2f"|format(item['price'] * item['quantity']) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="actions">
+            <a href="{{ url_for('index') }}" class="btn">Continue Shopping</a>
+            <a href="{{ url_for('my_orders') }}" class="btn btn-outline">View All Orders</a>
+        </div>
+    </div>
+
+</section>
+{% endblock %}

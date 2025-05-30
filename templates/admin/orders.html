@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Orders{% endblock %}
+
+{% block content %}
+<section class="admin-orders">
+    <div class="admin-orders-header">
+        <h1>Manage Orders</h1>
+    </div>
+    
+    <div class="order-filters">
+        <a href="{{ url_for('admin_orders') }}" class="filter-btn {% if status_filter == 'all' %}active{% endif %}">All</a>
+        <a href="{{ url_for('admin_orders') }}?status=Pending" class="filter-btn {% if status_filter == 'Pending' %}active{% endif %}">Pending</a>
+        <a href="{{ url_for('admin_orders') }}?status=Processing" class="filter-btn {% if status_filter == 'Processing' %}active{% endif %}">Processing</a>
+        <a href="{{ url_for('admin_orders') }}?status=Shipped" class="filter-btn {% if status_filter == 'Shipped' %}active{% endif %}">Shipped</a>
+        <a href="{{ url_for('admin_orders') }}?status=Delivered" class="filter-btn {% if status_filter == 'Delivered' %}active{% endif %}">Delivered</a>
+        <a href="{{ url_for('admin_orders') }}?status=Cancelled" class="filter-btn {% if status_filter == 'Cancelled' %}active{% endif %}">Cancelled</a>
+    </div>
+    
+    {% if orders %}
+    <div class="admin-table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>#{{ order['id'] }}</td>
+                    <td>{{ order['order_date'].strftime('%d %b %Y') }}</td>
+                    <td>{{ order['customer_name'] }}</td>
+                    <td>₹{{ "%.2f"|format(order['total_amount']) }}</td>
+                    <td>
+                        <span class="status-cell status-{{ order['status'] }}">{{ order['status'] }}</span>
+                    </td>
+                    <td class="admin-actions-cell">
+                        <a href="{{ url_for('admin_order_detail', order_id=order['id']) }}" class="btn-small view-order-btn">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="no-results">
+        <i class="fas fa-clipboard-list"></i>
+        <h3>No Orders Found</h3>
+        <p>No orders match your current filters. Try adjusting your search criteria.</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

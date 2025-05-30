@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<section class="checkout-section">
+    <h1>Checkout</h1>
+    
+    <div class="checkout-container">
+        <div class="order-summary">
+            <h2>Order Summary</h2>
+            <ul>
+                {% for item in cart_items %}
+                <li>
+                    <span>{{ item['name'] }} ({{ item['size'] }}) × {{ item['quantity'] }}</span>
+                    <span>₹{{ "%.2f"|format(item['price'] * item['quantity']) }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="total">
+                <span>Total</span>
+                <span>₹{{ "%.2f"|format(total) }}</span>
+            </div>
+        </div>
+        
+        <div class="shipping-form">
+            <h2>Shipping Information</h2>
+            <form action="{{ url_for('checkout') }}" method="POST">
+                <div class="form-group">
+                    <label for="shipping_address">Shipping Address</label>
+                    <textarea id="shipping_address" name="shipping_address" rows="4" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn">Place Order</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

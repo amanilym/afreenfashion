@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<section class="admin-dashboard">
+    <h1>Admin Dashboard</h1>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Products</h3>
+            <p>{{ product_count }}</p>
+            <a href="{{ url_for('admin_products') }}">Manage Products</a>
+        </div>
+        <div class="stat-card">
+            <h3>Total Orders</h3>
+            <p>{{ order_count }}</p>
+            <a href="{{ url_for('admin_orders') }}">Manage Orders</a>
+        </div>
+        <div class="stat-card">
+            <h3>Pending Orders</h3>
+            <p>{{ pending_orders }}</p>
+            <a href="{{ url_for('admin_orders') }}?status=Pending">View Pending</a>
+        </div>
+    </div>
+    
+    <div class="recent-orders">
+        <h2>Recent Orders</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in recent_orders %}
+                <tr>
+                    <td>#{{ order['id'] }}</td>
+                    <td>{{ order['customer_name'] }}</td>
+                    <td>{{ order['order_date'].strftime('%d %b %Y') }}</td>
+                    <td>₹{{ "%.2f"|format(order['total_amount']) }}</td>
+                    <td>
+                        <span class="status-{{ order['status'].lower() }}">{{ order['status'] }}</span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('admin_order_detail', order_id=order['id']) }}" class="btn-small">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

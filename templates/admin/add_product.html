@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Add Product{% endblock %}
+
+{% block content %}
+<section class="admin-form-section">
+    <h1>Add New Product</h1>
+    
+    <form action="{{ url_for('add_product') }}" method="POST" enctype="multipart/form-data">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="design_number">Design Number*</label>
+                <input type="text" id="design_number" name="design_number" required>
+            </div>
+            <div class="form-group">
+                <label for="name">Product Name*</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="3"></textarea>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="price">Price (₹)*</label>
+                <input type="number" id="price" name="price" step="0.01" min="0" required>
+            </div>
+            <div class="form-group">
+                <label for="image">Product Image</label>
+                <input type="file" id="image" name="image" accept="image/*">
+            </div>
+        </div>
+        
+        <div class="inventory-section">
+            <h3>Inventory</h3>
+            <div class="size-grid">
+                <div class="size-input">
+                    <label for="quantity_m">Size M</label>
+                    <input type="number" id="quantity_m" name="quantity_m" min="0" value="0">
+                </div>
+                <div class="size-input">
+                    <label for="quantity_l">Size L</label>
+                    <input type="number" id="quantity_l" name="quantity_l" min="0" value="0">
+                </div>
+                <div class="size-input">
+                    <label for="quantity_xl">Size XL</label>
+                    <input type="number" id="quantity_xl" name="quantity_xl" min="0" value="0">
+                </div>
+                <div class="size-input">
+                    <label for="quantity_2xl">Size 2XL</label>
+                    <input type="number" id="quantity_2xl" name="quantity_2xl" min="0" value="0">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn">Save Product</button>
+            <a href="{{ url_for('admin_products') }}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

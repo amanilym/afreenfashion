@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+<section class="orders-section">
+    <div class="orders-header">
+        <h1>My Orders</h1>
+    </div>
+    
+    {% if orders %}
+    <div class="orders-table-container">
+        <table class="orders-table">
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Date</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td class="order-id-cell">#{{ order['id'] }}</td>
+                    <td class="order-date-cell">
+                        {% if order['order_date'] is string %}
+                            {{ order['order_date'] }}
+                        {% else %}
+                            {{ order['order_date'].strftime('%d %b %Y') }}
+                        {% endif %}
+                    </td>
+                    <td>{{ order['items'] }}</td>
+                    <td>₹{{ "%.2f"|format(order['total_amount']) }}</td>
+                    <td>
+                        <span class="status-cell status-{{ order['status'].lower() }}">{{ order['status'] }}</span>
+                    </td>
+                    <td class="order-actions-cell">
+                        <a href="{{ url_for('order_confirmation', order_id=order['id']) }}" class="btn-small view-order-btn">View</a>
+                        {% if order['can_cancel'] %}
+                        <button class="btn-small btn-danger cancel-order" data-order-id="{{ order['id'] }}">Cancel</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="no-orders">
+        <i class="fas fa-box-open"></i>
+        <h3>No Orders Yet</h3>
+        <p>You haven't placed any orders. Start shopping to see your orders here.</p>
+        <a href="{{ url_for('products') }}" class="btn">Browse Products</a>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

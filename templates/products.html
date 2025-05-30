@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<section class="products-header">
+    <h1>Our Collection</h1>
+    <form class="search-form" action="{{ url_for('products') }}" method="GET">
+        <input type="text" name="search" placeholder="Search by name or design number..." value="{{ search }}">
+        <button type="submit"><i class="fas fa-search"></i></button>
+    </form>
+</section>
+
+<div class="product-grid">
+    {% for product in products %}
+    <div class="product-card">
+        <a href="{{ url_for('product_detail', product_id=product['id']) }}">
+            <div class="product-image">
+                {% if product['image_path'] %}
+                    <img src="{{ url_for('static', filename=product['image_path']) }}" alt="{{ product['name'] }}">
+                {% else %}
+                    <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Placeholder">
+                {% endif %}
+            </div>
+            <div class="product-info">
+                <h3>{{ product['name'] }}</h3>
+                <p class="design-number">Design #{{ product['design_number'] }}</p>
+                <p class="price">₹{{ "%.2f"|format(product['price']) }}</p>
+                <div class="available-sizes">
+                    {% if product['available_sizes'] %}
+                        {% set sizes = product['available_sizes'].split(',') %}
+                        {% for size in sizes %}
+                            <span class="size-tag">{{ size }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+{% if not products %}
+<div class="no-results">
+    <p>No products found matching your search.</p>
+    <a href="{{ url_for('products') }}" class="btn">View All Products</a>
+</div>
+{% endif %}
+{% endblock %}

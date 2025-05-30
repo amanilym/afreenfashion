@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Product{% endblock %}
+
+{% block content %}
+<section class="admin-form-section">
+    <h1>Edit Product</h1>
+    
+    <form action="{{ url_for('edit_product', product_id=product['id']) }}" method="POST" enctype="multipart/form-data">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="design_number">Design Number*</label>
+                <input type="text" id="design_number" name="design_number" value="{{ product['design_number'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="name">Product Name*</label>
+                <input type="text" id="name" name="name" value="{{ product['name'] }}" required>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="3">{{ product['description'] }}</textarea>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="price">Price (₹)*</label>
+                <input type="number" id="price" name="price" step="0.01" min="0" value="{{ product['price'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="image">Product Image</label>
+                <input type="file" id="image" name="image" accept="image/*">
+                {% if product['image_path'] %}
+                    <div class="current-image">
+                        <span>Current Image:</span>
+                        <img src="{{ url_for('static', filename=product['image_path']) }}" alt="{{ product['name'] }}" class="product-thumb">
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="is_active" {% if product['is_active'] %}checked{% endif %}>
+                Active Product
+            </label>
+        </div>
+        
+        <div class="inventory-section">
+            <h3>Inventory</h3>
+            <div class="size-grid">
+                <div class="size-input">
+                    <label for="quantity_m">Size M</label>
+                    <input type="number" id="quantity_m" name="quantity_m" min="0" value="{{ size_quantities.get('M', 0) }}">
+                </div>
+                <div class="size-input">
+                    <label for="quantity_l">Size L</label>
+                    <input type="number" id="quantity_l" name="quantity_l" min="0" value="{{ size_quantities.get('L', 0) }}">
+                </div>
+                <div class="size-input">
+                    <label for="quantity_xl">Size XL</label>
+                    <input type="number" id="quantity_xl" name="quantity_xl" min="0" value="{{ size_quantities.get('XL', 0) }}">
+                </div>
+                <div class="size-input">
+                    <label for="quantity_2xl">Size 2XL</label>
+                    <input type="number" id="quantity_2xl" name="quantity_2xl" min="0" value="{{ size_quantities.get('2XL', 0) }}">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn">Update Product</button>
+            <a href="{{ url_for('admin_products') }}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
